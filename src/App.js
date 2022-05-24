@@ -17,7 +17,6 @@ class ConnectFour extends React.Component {
 
   componentDidMount() {
     document.body.addEventListener("keydown", this.handleKeyPress);
-    // document.getElementById("pos00").classList.add("position-filled-red");
   }
 
   componentWillUnmount() {
@@ -25,33 +24,37 @@ class ConnectFour extends React.Component {
   }
 
   handleKeyPress(e) {
-    console.log(e.key);
+    // console.log(e.key);
     if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
       this.handleArrowKeys(e);
     }
     else if (e.key === "Enter") {
       this.handleEnter(e);
-    }
+    } 
   }
 
   handleEnter(e) {
     let selectedColumn = this.state.currentSelectedColumn;
     let firstEmptySpace;
+    let currentRow;
     for (let i = 0; i < 6; i++) {
       let position = document.getElementById(`pos${selectedColumn}${i}`);
       if (!position.children[1].classList.contains("position-filled-red") && !position.children[1].classList.contains("position-filled-yellow") && firstEmptySpace === undefined) {
         firstEmptySpace = position;
+        currentRow = i;
       }
     }
     if (firstEmptySpace !== undefined) {
       if (this.state.turn === "red") {
         firstEmptySpace.children[1].classList.add("position-filled-red");
+        this.checkForWin(selectedColumn, currentRow, "red");
         this.setState({
           turn: "yellow"
         });
       }
       else {
         firstEmptySpace.children[1].classList.add("position-filled-yellow");
+        this.checkForWin(selectedColumn, currentRow, "yellow");
         this.setState({
           turn: "red"
         });
@@ -92,6 +95,34 @@ class ConnectFour extends React.Component {
 
     let current = `selectPos${this.state.currentSelectedColumn}`
     document.getElementById(current).classList.add("active-select-position");
+  }
+
+  checkForWin(col, row, colour) {
+    // console.log(col, row, colour);
+    // for (let i = 0; i < 7; i++) {
+    //   console.log(document.getElementById(`pos${i}${row}`));
+    //   document.getElementById(`pos${i}${row}`).children[1].classList.add("winning-pos");
+    // }
+    let filledClass = `position-filled-${colour}`;
+    console.log(filledClass);
+    // let connectedFour = false;
+    for (let i = 0; i < 4; i++) {
+      let j = i;
+      let continuous = true;
+      while (continuous && j < i + 4) {
+        if (!document.getElementById(`pos${j}${row}`).children[1].classList.contains(filledClass)) {
+          continuous = false;
+        }
+        else {
+          j++;
+        }
+      }
+      if (j === i + 4) {
+        console.log("Connected 4");
+        // connectedFour = true;
+      }
+    }
+
   }
 
   render() {

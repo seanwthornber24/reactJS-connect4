@@ -68,3 +68,7 @@ body, html {
 .position-filled-yellow {
   background-color: rgb(235, 220, 0);
 }
+
+.winning-pos {
+  box-shadow:inset 0px 0px 0px 4px rgb(3, 150, 59);
+}
